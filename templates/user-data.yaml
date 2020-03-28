@@ -1,0 +1,23 @@
+---
+#cloud-config
+users:
+  - name: ${sshUserName}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${sshPubKey}
+
+packages:
+  - podman
+  - git
+  - jq
+  - vim
+
+yum_repos:
+  epel:
+    baseurl: https://dl.fedoraproject.org/pub/epel/7/x86_64/
+    enabled: true
+    gpgcheck: false
+    name: Extra Packages for Enterprise Linux 7
+
