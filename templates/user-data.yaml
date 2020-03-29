@@ -34,7 +34,12 @@ write_files:
           #     minimum - Modification of targeted policy. Only selected processes are protected.
           #     mls - Multi Level Security protection.
           SELINUXTYPE=targeted
-
         owner: root:root
         path: /etc/selinux/config
+        permissions: '0644'
+
+      - encoding: b64
+        content: W1VuaXRdCkRlc2NyaXB0aW9uPSJIYXNoaUNvcnAgQ29uc3VsIgpEb2N1bWVudGF0aW9uPWh0dHBzOi8vd3d3LmNvbnN1bC5pby8KUmVxdWlyZXM9bmV0d29yay1vbmxpbmUudGFyZ2V0CkFmdGVyPW5ldHdvcmstb25saW5lLnRhcmdldAoKCltTZXJ2aWNlXQpFbnZpcm9ubWVudD1DT05TVUxfREFUQT0iL29wdC9jb25zdWwiCkVudmlyb25tZW50PU5PREVfTkFNRT0iY29uc3VsLWxhYiIKVHlwZT1ub3RpZnkKVXNlcj1yb290Ckdyb3VwPXJvb3QKRXhlY1N0YXJ0UHJlPS9iaW4vYmFzaCAtYyAnaWYgW1sgISAtZiAvdXNyL2xvY2FsL2Jpbi9jb25zdWwgXV07IHRoZW4gY3VybCAtbyAvdXNyL2xvY2FsL2Jpbi9jb25zdWwuemlwIGh0dHBzOi8vcmVsZWFzZXMuaGFzaGljb3JwLmNvbS9jb25zdWwvMS42LjIvY29uc3VsXzEuNi4yX2xpbnV4X2FtZDY0LnppcCAmJiB1bnppcCAtbyAvdXNyL2xvY2FsL2Jpbi9jb25zdWwuemlwICAtZCAvdXNyL2xvY2FsL2Jpbi87IGZpJwpFeGVjU3RhcnRQcmU9L2Jpbi9ta2RpciAtcCAke0NPTlNVTF9EQVRBfQpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY29uc3VsIGFnZW50IC1jbGllbnQ9MTI3LjAuMC4xIC1zZXJ2ZXIgLWJpbmQ9MTI3LjAuMC4xIC1kYXRhLWRpcj0iJHtDT05TVUxfREFUQX0iICAtbm9kZT0ke05PREVfTkFNRX0gLXVpICAtam9pbiAxMjcuMC4wLjEgLWJvb3RzdHJhcC1leHBlY3Q9MQpFeGVjUmVsb2FkPS91c3IvbG9jYWwvYmluL2NvbnN1bCByZWxvYWQKS2lsbE1vZGU9cHJvY2VzcwpSZXN0YXJ0PW9uLWZhaWx1cmUKTGltaXROT0ZJTEU9NjU1MzYKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAoKCg==
+        owner: root:root
+        path: /etc/systemd/system/consul.service
         permissions: '0644'
