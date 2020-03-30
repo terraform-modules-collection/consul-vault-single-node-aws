@@ -38,14 +38,39 @@ write_files:
         path: /etc/selinux/config
         permissions: '0644'
 
-      - encoding: b64
-        content: W1VuaXRdCkRlc2NyaXB0aW9uPSJIYXNoaUNvcnAgQ29uc3VsIgpEb2N1bWVudGF0aW9uPWh0dHBzOi8vd3d3LmNvbnN1bC5pby8KUmVxdWlyZXM9bmV0d29yay1vbmxpbmUudGFyZ2V0CkFmdGVyPW5ldHdvcmstb25saW5lLnRhcmdldAoKW1NlcnZpY2VdClJlc3RhcnQ9b24tZmFpbHVyZQpFbnZpcm9ubWVudD1DT05TVUxfREFUQT0vb3B0L2NvbnN1bApFbnZpcm9ubWVudD1JTUFHRT1kb2NrZXIuaW8vbGlicmFyeS9jb25zdWwKRW52aXJvbm1lbnQ9VEFHPTEuNy4yCkV4ZWNTdGFydFByZT0vYmluL21rZGlyIC1wICR7Q09OU1VMX0RBVEF9CkV4ZWNTdGFydFByZT0vYmluL2Nob3duIC1SIDEwMDoxMDAwICR7Q09OU1VMX0RBVEF9CkV4ZWNTdGFydFByZT0vdXNyL2Jpbi9ybSAtZiAvJXQvJW4tcGlkIC8ldC8lbi1jaWQKRXhlY1N0YXJ0PS91c3IvYmluL3BvZG1hbiBydW4gLS1jb25tb24tcGlkZmlsZSAvJXQvJW4tcGlkIC0tY2lkZmlsZSAvJXQvJW4tY2lkIC0tbG9nLWRyaXZlcj1qb3VybmFsZCAgLS1uYW1lIGNvbnN1bCAtdiAke0NPTlNVTF9EQVRBfToke0NPTlNVTF9EQVRBfSAtZSAiQ09OU1VMX0RBVEE9JHtDT05TVUxfREFUQX0iICAtcCA4NTAwOjg1MDAgLXAgIDg2MDA6ODYwMC91ZHAgIC1kICAke0lNQUdFfToke1RBR30gYWdlbnQgLXNlcnZlciAtdWkgLW5vZGU9c2VydmVyLTEgLWJvb3RzdHJhcC1leHBlY3Q9MSAtY2xpZW50PTAuMC4wLjAgLXVpICAtam9pbiAxMjcuMC4wLjEgLWRhdGEtZGlyPSR7Q09OU1VMX0RBVEF9CkV4ZWNTdG9wPS91c3IvYmluL3NoIC1jICIvdXNyL2Jpbi9wb2RtYW4gcm0gLWYgYGNhdCAvJXQvJW4tY2lkYCIKS2lsbE1vZGU9bm9uZQpUeXBlPWZvcmtpbmcKUElERmlsZT0vJXQvJW4tcGlkCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQ=
+
+      - content: |
+          [Unit]
+          Description="HashiCorp Consul"
+          Documentation=https://www.consul.io/
+          Requires=network-online.target
+          After=network-online.target
+
+          [Service]
+          Restart=on-failure
+          Environment=CONSUL_DATA=/opt/consul
+          Environment=IMAGE=docker.io/library/consul
+          Environment=CONSUL_ETC=/etc/consul.d
+          Environment=HOST_INT=127.0.0.1
+          Environment=TAG=1.7.2
+          ExecStartPre=/bin/mkdir -p ${CONSUL_DATA}
+          ExecStartPre=/bin/mkdir -p ${CONSUL_ETC}
+          ExecStartPre=/bin/chown -R 100:1000 ${CONSUL_DATA} ${CONSUL_ETC}
+          ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
+          ExecStart=/usr/bin/podman run --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid --log-driver=journald  –env-host=true --name consul -v ${CONSUL_DATA}:${CONSUL_DATA}  -p ${HOST_INT}:8500:8500 -p  ${HOST_INT}:8600:8600/udp  -d  ${IMAGE}:${TAG} agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -ui  -join 127.0.0.1 -data-dir=${CONSUL_DATA} -config-dir=${CONSUL_ETC}
+          ExecStop=/usr/bin/sh -c "/usr/bin/podman rm -f `cat /%t/%n-cid`"
+          KillMode=none
+          Type=forking
+          PIDFile=/%t/%n-pid
+
+          [Install]
+          WantedBy=multi-user.target
         owner: root:root
         path: /etc/systemd/system/consul.service
         permissions: '0644'
 
 power_state:
-  delay: "+30"
+#  delay: "+30"
   mode: reboot
   message: "We completed!! So, reboot.."
   timeout: 10
