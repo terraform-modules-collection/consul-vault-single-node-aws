@@ -25,7 +25,7 @@ yum_repos:
       name: Stable Releases of Upstream github.com/containers packages (CentOS_7)
       baseurl: http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/
       gpgcheck: false
-      enabled: 1
+      enabled: 0
 
 write_files:
       - content: |
