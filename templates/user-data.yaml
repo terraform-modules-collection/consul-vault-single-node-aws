@@ -38,33 +38,8 @@ write_files:
         path: /etc/selinux/config
         permissions: '0644'
 
-
-      - content: |
-          [Unit]
-          Description="HashiCorp Consul"
-          Documentation=https://www.consul.io/
-          Requires=network-online.target
-          After=network-online.target
-
-          [Service]
-          Restart=on-failure
-          Environment=CONSUL_DATA=/opt/consul
-          Environment=IMAGE=docker.io/library/consul
-          Environment=CONSUL_ETC=/etc/consul.d
-          Environment=HOST_INT=127.0.0.1
-          Environment=TAG=1.7.2
-          ExecStartPre=/bin/mkdir -p ${CONSUL_DATA}
-          ExecStartPre=/bin/mkdir -p ${CONSUL_ETC}
-          ExecStartPre=/bin/chown -R 100:1000 ${CONSUL_DATA} ${CONSUL_ETC}
-          ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
-          ExecStart=/usr/bin/podman run --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid --log-driver=journald  –env-host=true --name consul -v ${CONSUL_DATA}:${CONSUL_DATA}  -p ${HOST_INT}:8500:8500 -p  ${HOST_INT}:8600:8600/udp  -d  ${IMAGE}:${TAG} agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -ui  -join 127.0.0.1 -data-dir=${CONSUL_DATA} -config-dir=${CONSUL_ETC}
-          ExecStop=/usr/bin/sh -c "/usr/bin/podman rm -f `cat /%t/%n-cid`"
-          KillMode=none
-          Type=forking
-          PIDFile=/%t/%n-pid
-
-          [Install]
-          WantedBy=multi-user.target
+      - encoding: b64
+        content: W1VuaXRdCkRlc2NyaXB0aW9uPSJIYXNoaUNvcnAgQ29uc3VsIgpEb2N1bWVudGF0aW9uPWh0dHBzOi8vd3d3LmNvbnN1bC5pby8KUmVxdWlyZXM9bmV0d29yay1vbmxpbmUudGFyZ2V0CkFmdGVyPW5ldHdvcmstb25saW5lLnRhcmdldAoKW1NlcnZpY2VdClJlc3RhcnQ9b24tZmFpbHVyZQpFbnZpcm9ubWVudD1DT05TVUxfREFUQT0vb3B0L2NvbnN1bApFbnZpcm9ubWVudD1JTUFHRT1kb2NrZXIuaW8vbGlicmFyeS9jb25zdWwKRW52aXJvbm1lbnQ9Q09OU1VMX0VUQz0vZXRjL2NvbnN1bC5kCkVudmlyb25tZW50PUhPU1RfSU5UPTEyNy4wLjAuMQpFbnZpcm9ubWVudD1UQUc9MS43LjIKRXhlY1N0YXJ0UHJlPS9iaW4vbWtkaXIgLXAgJHtDT05TVUxfREFUQX0KRXhlY1N0YXJ0UHJlPS9iaW4vbWtkaXIgLXAgJHtDT05TVUxfRVRDfQpFeGVjU3RhcnRQcmU9L2Jpbi9jaG93biAtUiAxMDA6MTAwMCAke0NPTlNVTF9EQVRBfSAke0NPTlNVTF9FVEN9CkV4ZWNTdGFydFByZT0vdXNyL2Jpbi9ybSAtZiAvJXQvJW4tcGlkIC8ldC8lbi1jaWQKRXhlY1N0YXJ0PS91c3IvYmluL3BvZG1hbiBydW4gLS1jb25tb24tcGlkZmlsZSAvJXQvJW4tcGlkIC0tY2lkZmlsZSAvJXQvJW4tY2lkIC0tbG9nLWRyaXZlcj1qb3VybmFsZCAg4oCTZW52LWhvc3Q9dHJ1ZSAtLW5hbWUgY29uc3VsIC12ICR7Q09OU1VMX0RBVEF9OiR7Q09OU1VMX0RBVEF9ICAtcCAke0hPU1RfSU5UfTo4NTAwOjg1MDAgLXAgICR7SE9TVF9JTlR9Ojg2MDA6ODYwMC91ZHAgIC1kICAke0lNQUdFfToke1RBR30gYWdlbnQgLXNlcnZlciAtdWkgLW5vZGU9c2VydmVyLTEgLWJvb3RzdHJhcC1leHBlY3Q9MSAtY2xpZW50PTAuMC4wLjAgLXVpICAtam9pbiAxMjcuMC4wLjEgLWRhdGEtZGlyPSR7Q09OU1VMX0RBVEF9IC1jb25maWctZGlyPSR7Q09OU1VMX0VUQ30KRXhlY1N0b3A9L3Vzci9iaW4vc2ggLWMgIi91c3IvYmluL3BvZG1hbiBybSAtZiBgY2F0IC8ldC8lbi1jaWRgIgpLaWxsTW9kZT1ub25lClR5cGU9Zm9ya2luZwpQSURGaWxlPS8ldC8lbi1waWQKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldA==
         owner: root:root
         path: /etc/systemd/system/consul.service
         permissions: '0644'
